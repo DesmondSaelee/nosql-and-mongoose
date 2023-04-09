@@ -31,10 +31,29 @@ module.exports = {
       });
   },
   // create a new thoughts
-  createThoughts(req, res) {
+
+createThoughts(req, res) {
     Thoughts.create(req.body)
-      .then((thoughts) => res.json(thoughts))
-      .catch((err) => res.status(500).json(err));
+      .then((thoughts) => {
+        res.json(thoughts)
+         User.findOneAndUpdate(
+          { _id: req.body.userId },
+          { thoughts: req.params.thoughtsId },
+          { $push: { thoughts: req.params.thoughtsId } },
+          { new: true }
+        );
+      })
+      .then((user) =>
+        !user
+          ? res.status(404).json({
+              message: 'Thought created, but found no user with that ID',
+            })
+          : res.json('Created the thought 🎉')
+      )
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
   },
   // Delete a thoughts and remove them from the course
   deleteThoughts(req, res) {
