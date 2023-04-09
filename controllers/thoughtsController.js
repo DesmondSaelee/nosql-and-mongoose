@@ -32,14 +32,12 @@ module.exports = {
   },
   // create a new thoughts
 
-createThoughts(req, res) {
+  createThoughts(req, res) {
     Thoughts.create(req.body)
-      .then((thoughts) => {
-        res.json(thoughts)
-         User.findOneAndUpdate(
+      .then((dbThoughtData) => {
+        return User.findOneAndUpdate(
           { _id: req.body.userId },
-          { thoughts: req.params.thoughtsId },
-          { $push: { thoughts: req.params.thoughtsId } },
+          { $push: { thoughts: dbThoughtData._id }},
           { new: true }
         );
       })
@@ -55,6 +53,24 @@ createThoughts(req, res) {
         res.status(500).json(err);
       });
   },
+
+// Update a thoughtData
+updateThoughts(req, res) {
+  Thoughts.findOneAndUpdate(
+    { _id: req.params.userId },
+    { $set: req.body },
+    { runValidators: true, new: true }
+  )
+    .then((dbthoughtData) =>
+      !dbthoughtData
+        ? res.status(404).json({ message: 'No thought with this id!' })
+        : res.json(dbthoughtData)
+    )
+    .catch((err) => res.status(500).json(err));
+},
+
+
+
   // Delete a thoughts and remove them from the course
   deleteThoughts(req, res) {
     Thoughts.findOneAndRemove({ _id: req.params.thoughtsId })
