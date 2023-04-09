@@ -6,13 +6,10 @@ module.exports = {
   // Get all thoughts
   getThoughts(req, res) {
     Thoughts.find()
-      .then(async (thoughts) => {
-        const thoughtsObj = {
-          thoughts,
-          headCount: await headCount(),
-        };
-        return res.json(thoughtsObj);
-      })
+    .sort({createdAt: -1})
+    .then((dbThoughtData) => {
+        res.json(dbThoughtData);
+    })
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
@@ -21,15 +18,13 @@ module.exports = {
   // Get a single thoughts
   getSingleThoughts(req, res) {
     Thoughts.findOne({ _id: req.params.thoughtsId })
-      .select('-__v')
-      .then(async (thoughts) =>
-        !thoughts
-          ? res.status(404).json({ message: 'No thoughts with that ID' })
-          : res.json({
-              thoughts,
-              grade: await grade(req.params.thoughtsId),
-            })
-      )
+     
+      .then ((dbThoughtData) => {
+        if(!dbThoughtData){
+           return res.status(404).json({message: "No thought with this id!"});
+        }
+        res.json(dbThoughtData);
+      })
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
