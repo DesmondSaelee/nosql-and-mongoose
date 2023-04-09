@@ -57,7 +57,7 @@ module.exports = {
 // Update a thoughtData
 updateThoughts(req, res) {
   Thoughts.findOneAndUpdate(
-    { _id: req.params.userId },
+    { _id: req.params.thoughtsId },
     { $set: req.body },
     { runValidators: true, new: true }
   )
@@ -102,7 +102,7 @@ updateThoughts(req, res) {
     console.log(req.body);
     Thoughts.findOneAndUpdate(
       { _id: req.params.thoughtsId },
-      { $addToSet: { reactions: req.body } },
+      { $addToSet: { reaction: req.body } },
       { runValidators: true, new: true }
     )
       .then((thoughts) =>

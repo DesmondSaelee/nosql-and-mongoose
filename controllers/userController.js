@@ -52,4 +52,41 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
+
+
+addFriends(req, res) {
+  console.log('You are adding a friend');
+  console.log(req.body);
+  User.findOneAndUpdate(
+    { _id: req.params.userId },
+    { $addToSet: { friends: req.body } },
+    { runValidators: true, new: true }
+  )
+    .then((userData) =>
+      !userData
+        ? res
+            .status(404)
+            .json({ message: 'No friend found with that ID :(' })
+        : res.json(userData)
+    )
+    .catch((err) => res.status(500).json(err));
+},
+
+// Remove reaction from a thoughts
+removeFriends(req, res) {
+  User.findOneAndUpdate(
+    { _id: req.params.userId },
+    { $pull: { reaction: { friendsId: req.params.friendsId } } },
+    { runValidators: true, new: true }
+  )
+    .then((userData) =>
+      !userData
+        ? res
+            .status(404)
+            .json({ message: 'No thoughts found with that ID :(' })
+        : res.json(userData)
+    )
+    .catch((err) => res.status(500).json(err));
+},
+
 };
