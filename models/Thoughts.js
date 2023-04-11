@@ -5,7 +5,7 @@ const dayjs = require('dayjs')
 const timeStamp =(date)=>{
   return dayjs(date).format("")
 }
-// Schema to create Student model
+// Thought schema related to reactions and users
 const thoughtSchema = new Schema(
   {
     thoughtText: {

@@ -3,7 +3,7 @@ const dayjs = require('dayjs')
 const timeStamp =(date)=>{
   return dayjs(date).format("")
 }
-// need formatting for day js dd/mm/yyy... etc. need to add day js to 
+// reaction schema related to thoughts
 const reactionSchema = new Schema(
   {
     reactionId: {

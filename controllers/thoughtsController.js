@@ -1,4 +1,4 @@
-// const { ObjectId } = require('mongoose').Types;
+
 const { Thoughts, User } = require('../models');
 
 
@@ -71,7 +71,7 @@ updateThoughts(req, res) {
 
 
 
-  // Delete a thoughts and remove them from the course
+  // Delete a thoughts and remove them from the user
   deleteThoughts(req, res) {
     Thoughts.findOneAndRemove({ _id: req.params.thoughtsId })
       .then((thoughts) =>
