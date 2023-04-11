@@ -59,7 +59,7 @@ addFriends(req, res) {
   console.log(req.body);
   User.findOneAndUpdate(
     { _id: req.params.userId },
-    { $addToSet: { friends: req.body } },
+    { $addToSet: { friends: req.params.friendsId } },
     { runValidators: true, new: true }
   )
     .then((userData) =>
@@ -67,7 +67,7 @@ addFriends(req, res) {
         ? res
             .status(404)
             .json({ message: 'No friend found with that ID :(' })
-        : res.json(userData)
+        : res.json({...userData,message:"Success!"})
     )
     .catch((err) => res.status(500).json(err));
 },
@@ -76,15 +76,15 @@ addFriends(req, res) {
 removeFriends(req, res) {
   User.findOneAndUpdate(
     { _id: req.params.userId },
-    { $pull: { reaction: { friendsId: req.params.friendsId } } },
+    { $pull: { friends:  req.params.friendsId  } },
     { runValidators: true, new: true }
   )
     .then((userData) =>
       !userData
         ? res
             .status(404)
-            .json({ message: 'No thoughts found with that ID :(' })
-        : res.json(userData)
+            .json({ message: 'No friends found with that ID :(' })
+        : res.json({...userData,message:"Success!"})
     )
     .catch((err) => res.status(500).json(err));
 },
